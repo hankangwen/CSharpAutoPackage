@@ -12,11 +12,16 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x'  # Updated to use .NET 6.0
+        dotnet-version: '6.0.x'  # 使用 .NET 6.0
 
     - name: Build and Publish
-      run: dotnet publish -c Release -r win-x64 --self-contained true
-      
+      run: dotnet publish -c Release -r win-x64 --self-contained true -o ./output
+
+    - name: Compress output directory
+      run: |
+        cd output
+        zip -r ../my_app.zip .
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -34,9 +39,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./output
+        asset_path: ./my_app.zip
         asset_name: my_app.zip
         asset_content_type: application/zip
-
-    - name: Compress output directory
-      run: zip -r my_app.zip ./output
