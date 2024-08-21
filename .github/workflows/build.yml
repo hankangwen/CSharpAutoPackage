@@ -19,8 +19,8 @@ jobs:
 
     - name: Compress output directory
       run: |
-        cd output
-        zip -r ../my_app.zip .
+        Compress-Archive -Path ./output/* -DestinationPath my_app.zip
+      shell: pwsh
 
     - name: Create Release
       id: create_release
